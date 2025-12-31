@@ -1,0 +1,26 @@
+{{/* Project Card Component */}}
+{{ $title := .Get "title" }}
+{{ $subtitle := .Get "subtitle" }}
+{{ $description := .Get "description" }}
+{{ $image := .Get "image" }}
+{{ $tags := .Get "tags" }}
+
+<div class="project-card">
+  <div class="project-content">
+    <span class="project-subtitle">{{ $subtitle }}</span>
+    <h3 class="project-title">{{ $title }}</h3>
+    <div class="project-description">
+      <p>{{ $description }}</p>
+      <div class="project-tags">
+        {{ $tagList := split $tags ", " }}
+        {{ range $tagList }}
+          <span class="project-tag">{{ . }}</span>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+  <div class="project-image">
+    <img src="{{ $image }}" alt="{{ $title }}" loading="lazy" />
+  </div>
+</div>
+

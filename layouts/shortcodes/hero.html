@@ -1,0 +1,37 @@
+{{/* Hero Section Component */}}
+{{ $name := .Get "name" }}
+{{ $title := .Get "title" }}
+{{ $years := .Get "years" | default "9+" }}
+{{ $projects := .Get "projects" | default "50+" }}
+{{ $clients := .Get "clients" | default "10+" }}
+
+<section class="hero-section">
+  <div class="availability-banner">
+    <span class="availability-dot"></span>
+    <span>Available for new opportunities</span>
+  </div>
+  
+  <p class="hero-greeting">Hi, my name is</p>
+  <h1 class="hero-name">{{ $name }}</h1>
+  <h2 class="hero-title">{{ $title }}</h2>
+  
+  <p class="hero-description">
+    {{ .Inner | markdownify }}
+  </p>
+  
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-number">{{ $years }}</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">{{ $projects }}</div>
+      <div class="stat-label">Projects Completed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">{{ $clients }}</div>
+      <div class="stat-label">Enterprise Clients</div>
+    </div>
+  </div>
+</section>
+
