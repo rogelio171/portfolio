@@ -1,7 +1,39 @@
-{{/* Custom CSS and fonts */}}
+{{/* ============================================ */}}
+{{/* PERFORMANCE OPTIMIZATION: Resource Hints    */}}
+{{/* ============================================ */}}
+
+{{/* DNS Prefetch - Resolve DNS early for external resources */}}
+<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="dns-prefetch" href="https://cdn.simpleicons.org">
+
+{{/* Preconnect - Establish early connections for critical resources */}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+{{/* ============================================ */}}
+{{/* FONT LOADING: Optimized Google Fonts        */}}
+{{/* ============================================ */}}
+{{/*
+   Font Optimization Notes:
+   - Using display=swap for FOUT instead of FOIT (better UX)
+   - Reduced font weights to only those actually used:
+     * Space Grotesk: 400 (body), 500, 600, 700 (headings)
+     * JetBrains Mono: 400 (code), 500
+     * Inter: 400 (body), 500, 600 (emphasis)
+   - Variable fonts (wght) are more efficient than multiple static weights
+*/}}
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+{{/* Favicon and branding */}}
+<link rel="icon" type="image/svg+xml" href="{{ "favicon.svg" | relURL }}">
+<link rel="apple-touch-icon" href="{{ "apple-touch-icon.svg" | relURL }}">
+<link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
+<meta name="theme-color" content="#64ffda">
+<meta name="msapplication-TileColor" content="#0a0a0a">
+
+{{/* RSS Feed autodiscovery */}}
+<link rel="alternate" type="application/rss+xml" title="{{ site.Title }} RSS Feed" href="{{ "index.xml" | absURL }}">
 
 {{ $customCSS := resources.Get "css/custom.css" }}
 {{ if $customCSS }}
@@ -9,24 +41,250 @@
   <link rel="stylesheet" href="{{ $customCSS.RelPermalink }}" integrity="{{ $customCSS.Data.Integrity }}">
 {{ end }}
 
-{{/* Script to add GitHub icon to social sharing links */}}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Find the sharing links section
-  const sharingSection = document.querySelector('section.flex.flex-row.flex-wrap.justify-center');
-  if (sharingSection) {
-    // Create GitHub link
-    const githubLink = document.createElement('a');
-    githubLink.href = 'https://github.com/rogelioorona';
-    githubLink.target = '_blank';
-    githubLink.rel = 'noopener noreferrer';
-    githubLink.title = 'GitHub Profile';
-    githubLink.className = 'm-1 rounded p-1.5 github-social-link';
-    githubLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>';
-    
-    // Insert GitHub link as the first item (before LinkedIn)
-    sharingSection.insertBefore(githubLink, sharingSection.firstChild);
-  }
-});
+{{/* ============================================ */}}
+{{/* Open Graph Meta Tags for Social Sharing     */}}
+{{/* ============================================ */}}
+
+{{- $title := .Title | default site.Title -}}
+{{- $description := .Description | default .Summary | default site.Params.author.bio | truncate 160 -}}
+{{- $url := .Permalink | default site.BaseURL -}}
+{{- $siteName := site.Title -}}
+
+{{/* Determine page type */}}
+{{- $ogType := "website" -}}
+{{- if .IsPage -}}
+  {{- if in (slice "blog" "posts") .Section -}}
+    {{- $ogType = "article" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Get image for Open Graph */}}
+{{- $ogImage := "" -}}
+{{- if .Params.image -}}
+  {{- $ogImage = .Params.image | absURL -}}
+{{- else if .Params.hero -}}
+  {{- $ogImage = .Params.hero | absURL -}}
+{{- else if site.Params.defaultOgImage -}}
+  {{- $ogImage = site.Params.defaultOgImage | absURL -}}
+{{- else -}}
+  {{/* Default fallback image */}}
+  {{- $ogImage = "/img/og-default.png" | absURL -}}
+{{- end -}}
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="{{ $ogType }}">
+<meta property="og:url" content="{{ $url }}">
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $description }}">
+<meta property="og:site_name" content="{{ $siteName }}">
+{{- if $ogImage }}
+<meta property="og:image" content="{{ $ogImage }}">
+<meta property="og:image:alt" content="{{ $title }}">
+{{- end }}
+<meta property="og:locale" content="{{ site.Language.Lang | default "en_US" }}">
+
+{{/* Article-specific Open Graph tags */}}
+{{- if eq $ogType "article" -}}
+{{- if .Date }}
+<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+{{- end }}
+{{- if .Lastmod }}
+<meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+{{- end }}
+{{- if .Params.author }}
+<meta property="article:author" content="{{ .Params.author }}">
+{{- else if site.Params.author.name }}
+<meta property="article:author" content="{{ site.Params.author.name }}">
+{{- end }}
+{{- range .Params.tags }}
+<meta property="article:tag" content="{{ . }}">
+{{- end }}
+{{- end -}}
+
+{{/* ============================================ */}}
+{{/* Twitter Card Meta Tags                      */}}
+{{/* ============================================ */}}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="{{ $url }}">
+<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:description" content="{{ $description }}">
+{{- if $ogImage }}
+<meta name="twitter:image" content="{{ $ogImage }}">
+<meta name="twitter:image:alt" content="{{ $title }}">
+{{- end }}
+{{- if site.Params.social.twitter }}
+<meta name="twitter:site" content="{{ site.Params.social.twitter }}">
+<meta name="twitter:creator" content="{{ site.Params.social.twitter }}">
+{{- end }}
+
+{{/* ============================================ */}}
+{{/* Additional SEO Meta Tags                    */}}
+{{/* ============================================ */}}
+
+<meta name="author" content="{{ site.Params.author.name | default "Rogelio Orona" }}">
+{{- if .Keywords }}
+<meta name="keywords" content="{{ delimit .Keywords ", " }}">
+{{- else if .Params.tags }}
+<meta name="keywords" content="{{ delimit .Params.tags ", " }}">
+{{- end }}
+
+{{/* Canonical URL */}}
+<link rel="canonical" href="{{ $url }}">
+
+{{/* ============================================ */}}
+{{/* JSON-LD Structured Data                     */}}
+{{/* ============================================ */}}
+
+{{/* Person Schema - Author information */}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "{{ site.Params.author.name | default "Rogelio Orona" }}",
+  "url": "{{ site.BaseURL }}",
+  "jobTitle": "{{ site.Params.author.headline | default "Senior Software Engineer" }}",
+  "description": "{{ site.Params.author.bio | default "Full-Stack Developer with expertise in Java, Spring Boot, Angular, and React" }}",
+  "sameAs": [
+    {{- $links := slice -}}
+    {{- range site.Params.author.links -}}
+      {{- range $key, $value := . -}}
+        {{- if ne $key "email" -}}
+          {{- $links = $links | append $value -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- delimit $links ", " -}}
+  ],
+  "knowsAbout": [
+    "Java",
+    "Spring Boot",
+    "Angular",
+    "React",
+    "TypeScript",
+    "Microservices",
+    "Cloud Computing",
+    "Software Architecture"
+  ]
+}
 </script>
 
+{{/* WebSite Schema */}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{{ site.Title }}",
+  "url": "{{ site.BaseURL }}",
+  "description": "{{ site.Params.author.bio | default "Portfolio and blog of a Senior Software Engineer" }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ site.Params.author.name | default "Rogelio Orona" }}"
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ site.BaseURL }}search/?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+{{/* BlogPosting Schema - Only for blog posts */}}
+{{- if and .IsPage (in (slice "blog" "posts") .Section) -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ .Title }}",
+  "description": "{{ $description }}",
+  "url": "{{ .Permalink }}",
+  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+  {{- if .Lastmod }}
+  "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
+  {{- else }}
+  "dateModified": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+  {{- end }}
+  "author": {
+    "@type": "Person",
+    "name": "{{ site.Params.author.name | default "Rogelio Orona" }}",
+    "url": "{{ site.BaseURL }}"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "{{ site.Params.author.name | default "Rogelio Orona" }}",
+    "url": "{{ site.BaseURL }}"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ .Permalink }}"
+  },
+  {{- if $ogImage }}
+  "image": "{{ $ogImage }}",
+  {{- end }}
+  "keywords": [{{ range $index, $tag := .Params.tags }}{{ if $index }}, {{ end }}"{{ $tag }}"{{ end }}],
+  "wordCount": {{ .WordCount }},
+  "timeRequired": "PT{{ .ReadingTime }}M",
+  "inLanguage": "{{ site.Language.Lang | default "en-US" }}"
+}
+</script>
+{{- end -}}
+
+{{/* BreadcrumbList Schema for navigation */}}
+{{- if not .IsHome -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ site.BaseURL }}"
+    }
+    {{- if .Parent -}}
+    ,{
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ .Parent.Title }}",
+      "item": "{{ .Parent.Permalink }}"
+    }
+    ,{
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ .Title }}",
+      "item": "{{ .Permalink }}"
+    }
+    {{- else -}}
+    ,{
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ .Title }}",
+      "item": "{{ .Permalink }}"
+    }
+    {{- end -}}
+  ]
+}
+</script>
+{{- end -}}
+
+{{/*
+   JAVASCRIPT NOTE:
+   DOM manipulation scripts are loaded in extend-footer.html to avoid
+   blocking the critical rendering path. Only JSON-LD structured data
+   scripts are included here as they don't execute JavaScript.
+
+   Scripts are optimized by:
+   - Moving interactive scripts to footer (after content loads)
+   - Using defer attribute where possible
+   - Minimizing third-party scripts
+*/}}
+
+{{/* ============================================ */}}
+{{/* Analytics Integration                       */}}
+{{/* ============================================ */}}
+{{/* Load analytics based on configuration in params.toml */}}
+{{ partial "analytics.html" . }}

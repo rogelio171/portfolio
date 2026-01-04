@@ -12,6 +12,17 @@ enableSearch = true
 mainSections = ["blog"]
 robots = "index, follow"
 
+# Favicon and branding
+# Note: Favicon files are in /static/ directory
+# - favicon.svg (main icon)
+# - apple-touch-icon.svg (iOS/macOS)
+# - site.webmanifest (PWA manifest)
+favicon = "favicon.svg"
+
+# Default Open Graph image for social sharing
+# Replace /img/og-default.svg with a PNG (1200x630px) for best compatibility
+defaultOgImage = "/img/og-default.svg"
+
 # Hero settings
 [homepage]
   layout = "custom"
@@ -111,6 +122,84 @@ robots = "index, follow"
   links = [
     { github = "https://github.com/rogelioorona" },
     { linkedin = "https://linkedin.com/in/rogelioorona" },
-    { email = "mailto:rogelio@example.com" }
+    { email = "mailto:rogelio.orona@proton.me" }
   ]
+
+# ============================================
+# ANALYTICS CONFIGURATION
+# ============================================
+# Choose ONE analytics provider: GA4 or Plausible
+# Set enabled = true for your preferred provider
+#
+# PRIVACY NOTE: Both options are configured for privacy-friendly tracking
+# ============================================
+
+[analytics]
+  # --------------------------------------------
+  # Google Analytics 4 (GA4)
+  # --------------------------------------------
+  # To get your GA4 Measurement ID:
+  # 1. Go to https://analytics.google.com
+  # 2. Create a property or select existing one
+  # 3. Go to Admin > Data Streams > Web
+  # 4. Copy the Measurement ID (format: G-XXXXXXXXXX)
+  #
+  # Privacy settings are enabled by default:
+  # - IP anonymization
+  # - No advertising features
+  # - Respects Do Not Track
+  [analytics.ga4]
+    enabled = false
+    measurementId = ""  # Replace with your GA4 Measurement ID (e.g., "G-XXXXXXXXXX")
+    # Privacy-friendly settings
+    anonymizeIP = true              # Anonymize visitor IP addresses
+    respectDoNotTrack = true        # Honor browser DNT setting
+    disableAdFeatures = true        # Disable advertising features
+    cookieFlags = "SameSite=Strict" # Strict cookie policy
+
+  # --------------------------------------------
+  # Plausible Analytics (Privacy-Focused Alternative)
+  # --------------------------------------------
+  # To get started with Plausible:
+  # 1. Sign up at https://plausible.io (or self-host)
+  # 2. Add your domain
+  # 3. Use your domain as the dataDomain value
+  #
+  # Benefits: No cookies, GDPR compliant by default,
+  # lightweight script (~1KB), EU-based servers
+  [analytics.plausible]
+    enabled = false
+    dataDomain = ""     # Your site domain (e.g., "rogelioorona.com")
+    scriptUrl = "https://plausible.io/js/script.js"  # Default Plausible CDN
+    # For self-hosted: use your Plausible instance URL
+    # scriptUrl = "https://analytics.yourdomain.com/js/script.js"
+    #
+    # Optional: Enable additional tracking features
+    # Use "https://plausible.io/js/script.outbound-links.js" for external link tracking
+    # Use "https://plausible.io/js/script.file-downloads.js" for download tracking
+    # Combine features: "https://plausible.io/js/script.outbound-links.file-downloads.js"
+
+# ============================================
+# CONTACT FORM CONFIGURATION
+# ============================================
+# Using Formspree for form handling (free tier: 50 submissions/month)
+
+[contact]
+  # --------------------------------------------
+  # Formspree Configuration
+  # --------------------------------------------
+  # To set up Formspree:
+  # 1. Go to https://formspree.io
+  # 2. Create a free account
+  # 3. Create a new form
+  # 4. Copy your form ID (format: xyzabcdef)
+  # 5. Paste it below
+  formspreeId = ""  # Replace with your Formspree form ID (e.g., "xyzabcdef")
+
+  # Contact information displayed on the page
+  email = "rogelio.orona@proton.me"
+
+  # Optional: Additional contact methods
+  # linkedin = "https://linkedin.com/in/rogelioorona"
+  # github = "https://github.com/rogelioorona"
 

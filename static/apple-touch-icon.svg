@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180">
+  <!-- Background -->
+  <rect width="180" height="180" rx="36" fill="#0a0a0a"/>
+
+  <!-- Border -->
+  <rect x="6" y="6" width="168" height="168" rx="30" fill="none" stroke="#64ffda" stroke-width="2"/>
+
+  <!-- RO Monogram - scaled for 180x180 -->
+  <g fill="#64ffda" transform="translate(20, 45) scale(0.28)">
+    <!-- R letter -->
+    <path d="M120 140h100c45 0 75 35 75 70 0 35-25 60-55 68l65 82h-55l-58-75h-32v75h-40V140zm40 110h55c25 0 40-15 40-40s-15-35-40-35h-55v75z"/>
+
+    <!-- O letter -->
+    <path d="M312 245c0-65 50-110 110-110s110 45 110 110-50 110-110 110-110-45-110-110zm175 0c0-40-28-72-65-72s-65 32-65 72 28 72 65 72 65-32 65-72z"/>
+  </g>
+</svg>

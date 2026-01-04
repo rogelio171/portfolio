@@ -1,0 +1,45 @@
+<!--
+  PROFILE PLACEHOLDER
+  ===================
+  Replace this file with your professional headshot photo.
+
+  Recommended specifications:
+  - Format: JPG or PNG
+  - Size: 400x400px minimum (square aspect ratio preferred)
+  - File name: profile.jpg or profile.png
+  - Location: /static/img/profile.jpg
+
+  After adding your photo:
+  1. Delete this placeholder file
+  2. Update any references to use your new image
+
+  Tips for a professional photo:
+  - Use a neutral or simple background
+  - Good lighting (natural light works best)
+  - Professional attire
+  - Friendly, approachable expression
+  - High resolution for clarity
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#111827"/>
+
+  <!-- Circle background for avatar -->
+  <circle cx="200" cy="200" r="180" fill="rgba(100, 255, 218, 0.1)" stroke="#64ffda" stroke-width="2"/>
+
+  <!-- Silhouette head -->
+  <circle cx="200" cy="150" r="60" fill="#1e293b"/>
+
+  <!-- Silhouette body -->
+  <ellipse cx="200" cy="320" rx="100" ry="80" fill="#1e293b"/>
+
+  <!-- Camera icon suggestion -->
+  <g transform="translate(160, 280)">
+    <rect x="0" y="10" width="80" height="50" rx="8" fill="none" stroke="#64ffda" stroke-width="2" stroke-dasharray="4,4"/>
+    <circle cx="40" cy="35" r="15" fill="none" stroke="#64ffda" stroke-width="2" stroke-dasharray="4,4"/>
+    <rect x="25" y="5" width="30" height="10" rx="3" fill="none" stroke="#64ffda" stroke-width="2" stroke-dasharray="4,4"/>
+  </g>
+
+  <!-- Text hint -->
+  <text x="200" y="380" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#64748b">Add your photo</text>
+</svg>

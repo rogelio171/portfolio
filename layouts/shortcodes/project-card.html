@@ -1,26 +1,81 @@
-{{/* Project Card Component */}}
+{{/*
+  Project Card Component
+  ======================
+  Displays a project with image, title, subtitle, description, and tags.
+
+  Accessibility:
+  - Uses article element for semantic grouping
+  - Proper heading hierarchy (h3 for project titles)
+  - Descriptive alt text for images
+  - Decorative SVG placeholders are hidden from screen readers
+  - Technology tags use a list for proper semantics
+
+  Usage:
+    {{< project-card
+      title="Project Name"
+      subtitle="Category"
+      description="Brief description"
+      image="/img/projects/project.png"
+      tags="Java, Spring Boot, React"
+    >}}
+
+  Note: If no image is provided or image is missing, a styled placeholder
+  will be displayed automatically. Replace placeholder images in static/img/projects/
+*/}}
 {{ $title := .Get "title" }}
 {{ $subtitle := .Get "subtitle" }}
 {{ $description := .Get "description" }}
 {{ $image := .Get "image" }}
 {{ $tags := .Get "tags" }}
+{{/* Generate unique ID for aria-labelledby */}}
+{{ $id := $title | urlize }}
 
-<div class="project-card">
+<article class="project-card{{ if not $image }} no-image{{ end }}" aria-labelledby="project-{{ $id }}">
   <div class="project-content">
     <span class="project-subtitle">{{ $subtitle }}</span>
-    <h3 class="project-title">{{ $title }}</h3>
+    <h3 class="project-title" id="project-{{ $id }}">{{ $title }}</h3>
     <div class="project-description">
       <p>{{ $description }}</p>
-      <div class="project-tags">
+      <ul class="project-tags" role="list" aria-label="Technologies used in {{ $title }}">
         {{ $tagList := split $tags ", " }}
         {{ range $tagList }}
-          <span class="project-tag">{{ . }}</span>
+          <li class="project-tag">{{ . }}</li>
         {{ end }}
-      </div>
+      </ul>
     </div>
   </div>
-  <div class="project-image">
-    <img src="{{ $image }}" alt="{{ $title }}" loading="lazy" />
-  </div>
-</div>
+  {{/* Image section with fallback handling */}}
+  {{ if $image }}
+    {{/* Check if image exists in static folder */}}
+    {{ $staticImage := printf "static%s" $image }}
+    {{ if fileExists $staticImage }}
+      <div class="project-image">
+        <img src="{{ $image }}" alt="Screenshot of {{ $title }} project interface" loading="lazy" />
+      </div>
+    {{ else }}
+      {{/* Image path provided but file doesn't exist - show styled placeholder */}}
+      <div class="project-image project-image-placeholder" aria-hidden="true">
+        <div class="placeholder-content">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <span>{{ $title }}</span>
+        </div>
+      </div>
+    {{ end }}
+  {{ else }}
+    {{/* No image provided - show code-themed placeholder */}}
+    <div class="project-image project-image-placeholder" aria-hidden="true">
+      <div class="placeholder-content">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
+        </svg>
+        <span>{{ $title }}</span>
+      </div>
+    </div>
+  {{ end }}
+</article>
 

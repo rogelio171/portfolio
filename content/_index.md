@@ -1,6 +1,6 @@
 ---
 title: "Rogelio Orona"
-description: "Senior Software Engineer specializing in Java, Spring Boot, Angular, and React"
+description: "Senior Software Engineer with 9+ years of experience building enterprise applications. Expert in Java, Spring Boot, Angular, React, and cloud technologies."
 layout: "simple"
 ---
 
@@ -115,9 +115,12 @@ Full-Stack Developer passionate about building scalable enterprise applications.
 </div>
 
 <div class="cta-section">
-  <p class="cta-subtitle">What's Next?</p>
-  <h2 class="cta-title">Let's Work Together</h2>
-  <p class="cta-description">I'm currently exploring new opportunities where I can contribute to meaningful projects and continue growing as an engineer.</p>
-  <a href="mailto:rogelio@example.com" class="btn-primary">Get In Touch</a>
+  <p class="cta-subtitle">Ready to Build Something Great?</p>
+  <h2 class="cta-title">Let's Solve Your Next Challenge</h2>
+  <p class="cta-description">Whether you need to scale your platform to millions of users, modernize legacy systems, or build a high-performing engineering team, I bring 9+ years of proven results with Fortune 500 companies. Let's discuss how I can help accelerate your next project.</p>
+  <div class="cta-buttons">
+    <a href="mailto:rogelio.orona@proton.me" class="btn-primary">Start a Conversation</a>
+    <a href="/experience/" class="btn-secondary">View My Track Record</a>
+  </div>
 </div>
 

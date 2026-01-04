@@ -1,37 +1,47 @@
 {{/* Hero Section Component */}}
+{{/*
+  Accessibility:
+  - Uses proper heading hierarchy (h1 for name, h2 for title)
+  - Stats are marked up with proper semantics
+  - Availability banner uses appropriate ARIA live region
+  - Decorative elements are hidden from screen readers
+*/}}
 {{ $name := .Get "name" }}
 {{ $title := .Get "title" }}
 {{ $years := .Get "years" | default "9+" }}
 {{ $projects := .Get "projects" | default "50+" }}
 {{ $clients := .Get "clients" | default "10+" }}
 
-<section class="hero-section">
-  <div class="availability-banner">
-    <span class="availability-dot"></span>
+<section class="hero-section" aria-label="Introduction">
+  <div class="availability-banner" role="status" aria-live="polite">
+    <span class="availability-dot" aria-hidden="true"></span>
     <span>Available for new opportunities</span>
   </div>
-  
+
   <p class="hero-greeting">Hi, my name is</p>
   <h1 class="hero-name">{{ $name }}</h1>
   <h2 class="hero-title">{{ $title }}</h2>
-  
+
   <p class="hero-description">
     {{ .Inner | markdownify }}
   </p>
-  
-  <div class="hero-stats">
+
+  <dl class="hero-stats" aria-label="Professional statistics">
     <div class="stat-item">
-      <div class="stat-number">{{ $years }}</div>
-      <div class="stat-label">Years Experience</div>
+      <dt class="sr-only">Years of Experience</dt>
+      <dd class="stat-number">{{ $years }}</dd>
+      <dt class="stat-label" aria-hidden="true">Years Experience</dt>
     </div>
     <div class="stat-item">
-      <div class="stat-number">{{ $projects }}</div>
-      <div class="stat-label">Projects Completed</div>
+      <dt class="sr-only">Projects Completed</dt>
+      <dd class="stat-number">{{ $projects }}</dd>
+      <dt class="stat-label" aria-hidden="true">Projects Completed</dt>
     </div>
     <div class="stat-item">
-      <div class="stat-number">{{ $clients }}</div>
-      <div class="stat-label">Enterprise Clients</div>
+      <dt class="sr-only">Enterprise Clients</dt>
+      <dd class="stat-number">{{ $clients }}</dd>
+      <dt class="stat-label" aria-hidden="true">Enterprise Clients</dt>
     </div>
-  </div>
+  </dl>
 </section>
 

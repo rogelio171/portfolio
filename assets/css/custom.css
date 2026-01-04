@@ -1,10 +1,73 @@
 /* ============================================
    ROGELIO ORONA - PORTFOLIO CUSTOM STYLES
    Professional Dark Theme with Cyan Accents
+   ============================================
+
+   TABLE OF CONTENTS
+   =================
+   1. PERFORMANCE & CRITICAL CSS (Lines 40-75)
+      - CSS Variables (design tokens)
+      - Base typography styles
+      - Critical layout overrides
+
+   2. LAYOUT (Lines 80-140)
+      - Header layout
+      - Main content area
+      - Navigation alignment
+
+   3. FOOTER (Lines 145-225)
+      - Footer styling
+      - Social links
+      - Copyright
+
+   4. ANIMATIONS (Lines 230-295)
+      - Keyframe definitions
+      - Staggered animations
+      Note: Uses GPU-accelerated transforms only
+
+   5. COMPONENTS (Lines 300-700)
+      - Hero section
+      - Buttons
+      - Tech marquee
+      - Section headers
+      - Skills grid
+      - Project cards
+      - Value propositions
+      - CTA section
+
+   6. UTILITIES & RESPONSIVE (Lines 700+)
+      - Custom scrollbar
+      - Link colors
+      - Text overrides
+      - Media queries
+
+   PERFORMANCE NOTES
+   =================
+   - Fonts loaded via extend-head.html with preconnect
+   - CSS minified and fingerprinted by Hugo (--minify flag)
+   - Uses CSS custom properties for smaller bundle
+   - Animations use transform/opacity (GPU-accelerated)
+   - No @import statements (blocks rendering)
+   - backdrop-filter used sparingly (expensive)
+
+   LIGHTHOUSE OPTIMIZATION TARGETS
+   ===============================
+   - Avoid layout shifts: explicit dimensions where possible
+   - Reduce unused CSS: organized by component for easier pruning
+   - Use will-change sparingly: only on animated elements
    ============================================ */
 
-/* Custom Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+/*
+   FONTS NOTE:
+   Google Fonts are loaded in layouts/partials/extend-head.html
+   with preconnect and font-display: swap for optimal performance.
+   DO NOT use @import for fonts as it blocks rendering.
+*/
+
+/* ============================================
+   1. PERFORMANCE & CRITICAL CSS
+   These styles are essential for above-the-fold content.
+   ============================================ */
 
 /* CSS Variables */
 :root {
@@ -85,6 +148,9 @@ header, .header {
   margin: 0 auto;
   padding: 0.75rem 2rem;
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
 /* Expand main content area */
 main article > div:first-of-type,
@@ -99,9 +165,6 @@ main > article > div {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 2rem;
-}
-  align-items: center;
-  justify-content: space-between;
 }
 
 /* Remove margin from nav and align to content */
@@ -700,6 +763,51 @@ contentinfo nav {
   opacity: 1;
 }
 
+/* Project image placeholder styles */
+.project-image-placeholder {
+  background: linear-gradient(135deg, rgba(100, 255, 218, 0.08), rgba(100, 255, 218, 0.02));
+}
+
+.project-image-placeholder .placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 2rem;
+}
+
+.project-image-placeholder .placeholder-content svg {
+  color: var(--primary-color);
+  opacity: 0.4;
+}
+
+.project-image-placeholder .placeholder-content span {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.project-card:hover .project-image-placeholder .placeholder-content svg {
+  opacity: 0.6;
+}
+
+.project-card:hover .project-image-placeholder .placeholder-content span {
+  opacity: 0.8;
+}
+
+/* No-image card layout adjustment */
+.project-card.no-image {
+  grid-template-columns: 1fr;
+}
+
+.project-card.no-image .project-content {
+  padding: 2.5rem;
+}
+
 @media (max-width: 768px) {
   .project-card {
     grid-template-columns: 1fr;
@@ -774,10 +882,17 @@ contentinfo nav {
 }
 
 .cta-description {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto 2rem;
   color: var(--text-secondary);
   font-size: 1.125rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 /* ============================================
@@ -786,6 +901,47 @@ contentinfo nav {
 
 footer, .footer {
   background-color: #000000 !important;
+}
+
+/* Footer extras - RSS link and additional elements */
+.footer-extras {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.rss-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  text-decoration: none;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.rss-link:hover {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  background: rgba(100, 255, 218, 0.05);
+}
+
+.rss-link svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.rss-link:hover svg {
+  transform: scale(1.1);
 }
 
 /* ============================================
@@ -810,6 +966,87 @@ footer, .footer {
   .btn-primary, .btn-secondary {
     width: 100%;
     justify-content: center;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY UTILITIES
+   ============================================ */
+
+/* Screen reader only - visually hidden but accessible to screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip to main content link - visible on focus */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary-color);
+  color: var(--bg-dark);
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+  z-index: 1000;
+  transition: top 0.3s;
+}
+
+.skip-to-content:focus {
+  top: 0;
+  outline: 3px solid var(--primary-dark);
+  outline-offset: 2px;
+}
+
+/* Enhanced focus visibility for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Remove default focus styles only when not using keyboard */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Specific focus styles for interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-color: #7cffe8;
+    --border-color: rgba(100, 255, 218, 0.4);
   }
 }
 
@@ -840,5 +1077,331 @@ a:hover {
 .text-neutral-500,
 .dark .text-neutral-500 {
   color: var(--text-muted) !important;
+}
+
+/* ============================================
+   CONTACT PAGE STYLES
+   ============================================ */
+
+.contact-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.contact-intro {
+  text-align: center;
+  margin-bottom: 4rem;
+  animation: fadeInUp 0.6s ease;
+}
+
+.contact-subtitle {
+  font-family: var(--font-mono);
+  color: var(--primary-color);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.contact-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem;
+}
+
+.contact-description {
+  max-width: 600px;
+  margin: 0 auto;
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+
+.contact-container {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* Form Wrapper */
+.contact-form-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 2.5rem;
+  animation: fadeInUp 0.6s ease 0.1s forwards;
+  opacity: 0;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.label-required {
+  color: var(--primary-color);
+}
+
+.form-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Form Inputs */
+.form-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-input:hover {
+  border-color: var(--border-hover);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.1);
+}
+
+.form-input.valid {
+  border-color: var(--primary-color);
+}
+
+.form-input.invalid {
+  border-color: #ef4444;
+}
+
+/* Select dropdown */
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364ffda' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+  padding-right: 3rem;
+}
+
+.form-select option {
+  background: var(--bg-dark);
+  color: var(--text-primary);
+}
+
+/* Textarea */
+.form-textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+/* Submit Button */
+.form-actions {
+  margin-top: 1rem;
+}
+
+.form-submit {
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+}
+
+.form-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+.spinner-circle {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 20;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Form Status Messages */
+.form-status {
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  margin-top: 1rem;
+}
+
+.form-status-success,
+.form-status-error {
+  display: flex;
+}
+
+.form-status-success {
+  background: rgba(100, 255, 218, 0.1);
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.form-status-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+.form-status svg {
+  flex-shrink: 0;
+}
+
+/* Contact Info Sidebar */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: fadeInUp 0.6s ease 0.2s forwards;
+  opacity: 0;
+}
+
+.info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  border-color: var(--border-hover);
+  transform: translateX(5px);
+}
+
+.info-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(100, 255, 218, 0.1);
+  border-radius: 10px;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.info-content h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.5rem;
+}
+
+.info-content a {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: color 0.2s ease;
+}
+
+.info-content a:hover {
+  color: var(--primary-color);
+}
+
+.response-time {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: rgba(100, 255, 218, 0.05);
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.response-time svg {
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+/* Responsive Styles for Contact Page */
+@media (max-width: 900px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .contact-info {
+    order: -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .response-time {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-page {
+    padding: 1rem 0;
+  }
+
+  .contact-form-wrapper {
+    padding: 1.5rem;
+  }
+
+  .contact-intro {
+    margin-bottom: 2rem;
+  }
+
+  .info-card {
+    padding: 1rem;
+  }
 }
 
