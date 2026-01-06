@@ -1,0 +1,22 @@
+{
+  "name": "Rogelio Orona | Senior Software Engineer",
+  "short_name": "RO Portfolio",
+  "description": "Portfolio of Rogelio Orona - Full-Stack Developer specializing in Java, Spring Boot, Angular, and React",
+  "icons": [
+    {
+      "src": "/portfolio/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/portfolio/apple-touch-icon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml"
+    }
+  ],
+  "theme_color": "#64ffda",
+  "background_color": "#0a0a0a",
+  "display": "standalone",
+  "start_url": "/portfolio/"
+}

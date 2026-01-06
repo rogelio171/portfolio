@@ -1,0 +1,115 @@
+{{/*
+  Analytics Partial
+  =================
+  Supports Google Analytics 4 (GA4) and Plausible Analytics
+  Configure in config/_default/params.toml under [analytics]
+
+  Privacy Features:
+  - Respects Do Not Track browser setting
+  - IP anonymization (GA4)
+  - Cookie-less option (Plausible)
+  - No advertising features
+*/}}
+
+{{/* ============================================ */}}
+{{/* Google Analytics 4 (GA4)                    */}}
+{{/* ============================================ */}}
+{{- if and site.Params.analytics.ga4.enabled site.Params.analytics.ga4.measurementId -}}
+{{- $ga4 := site.Params.analytics.ga4 -}}
+
+{{/* Check Do Not Track setting if configured */}}
+{{- if $ga4.respectDoNotTrack }}
+<script>
+  // Respect Do Not Track browser setting
+  (function() {
+    var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+    if (dnt === "1" || dnt === "yes") {
+      window['ga-disable-{{ $ga4.measurementId }}'] = true;
+      console.log('Analytics disabled: Do Not Track is enabled');
+      return;
+    }
+
+    // Load GA4 script only if DNT is not set
+    loadGA4();
+  })();
+
+  function loadGA4() {
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id={{ $ga4.measurementId }}';
+    document.head.appendChild(script);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '{{ $ga4.measurementId }}', {
+      {{- if $ga4.anonymizeIP }}
+      'anonymize_ip': true,
+      {{- end }}
+      {{- if $ga4.disableAdFeatures }}
+      'allow_google_signals': false,
+      'allow_ad_personalization_signals': false,
+      {{- end }}
+      {{- if $ga4.cookieFlags }}
+      'cookie_flags': '{{ $ga4.cookieFlags }}',
+      {{- end }}
+      'send_page_view': true
+    });
+  }
+</script>
+{{- else }}
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ $ga4.measurementId }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '{{ $ga4.measurementId }}', {
+    {{- if $ga4.anonymizeIP }}
+    'anonymize_ip': true,
+    {{- end }}
+    {{- if $ga4.disableAdFeatures }}
+    'allow_google_signals': false,
+    'allow_ad_personalization_signals': false,
+    {{- end }}
+    {{- if $ga4.cookieFlags }}
+    'cookie_flags': '{{ $ga4.cookieFlags }}',
+    {{- end }}
+    'send_page_view': true
+  });
+</script>
+{{- end }}
+{{- end }}
+
+{{/* ============================================ */}}
+{{/* Plausible Analytics                         */}}
+{{/* ============================================ */}}
+{{- if and site.Params.analytics.plausible.enabled site.Params.analytics.plausible.dataDomain -}}
+{{- $plausible := site.Params.analytics.plausible -}}
+<!-- Plausible Analytics - Privacy-focused, cookie-free analytics -->
+<script defer
+  data-domain="{{ $plausible.dataDomain }}"
+  src="{{ $plausible.scriptUrl | default "https://plausible.io/js/script.js" }}">
+</script>
+{{/* Optional: Enable local script for blocked networks */}}
+<script>
+  // Fallback if Plausible script is blocked
+  window.plausible = window.plausible || function() {
+    (window.plausible.q = window.plausible.q || []).push(arguments)
+  }
+</script>
+{{- end }}
+
+{{/* ============================================ */}}
+{{/* No Analytics Configured                     */}}
+{{/* ============================================ */}}
+{{- if not (or site.Params.analytics.ga4.enabled site.Params.analytics.plausible.enabled) -}}
+<!--
+  Analytics not configured.
+  To enable analytics, edit config/_default/params.toml and set:
+  - [analytics.ga4] enabled = true and add your measurementId, OR
+  - [analytics.plausible] enabled = true and add your dataDomain
+-->
+{{- end -}}

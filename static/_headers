@@ -1,0 +1,47 @@
+# Security Headers Configuration
+# Compatible with Netlify and Cloudflare Pages
+# For GitHub Pages, use a serverless function or Cloudflare proxy
+# Reference: https://securityheaders.com/
+
+/*
+  # Content Security Policy
+  # Allows inline styles/scripts for Hugo themes while maintaining security
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'
+
+  # Prevent clickjacking attacks
+  X-Frame-Options: SAMEORIGIN
+
+  # Prevent MIME type sniffing
+  X-Content-Type-Options: nosniff
+
+  # Enable XSS protection in older browsers
+  X-XSS-Protection: 1; mode=block
+
+  # Control referrer information sent with requests
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Restrict browser features/APIs
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()
+
+  # Force HTTPS (only enable if site is HTTPS-only)
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# Cache static assets aggressively
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/img/*
+  Cache-Control: public, max-age=86400
+
+# HTML pages should not be cached aggressively
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/
+  Cache-Control: public, max-age=0, must-revalidate

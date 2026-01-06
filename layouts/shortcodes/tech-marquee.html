@@ -1,7 +1,35 @@
 {{/* Animated Tech Stack Marquee */}}
-<div class="tech-marquee-container">
-  <div class="tech-marquee">
-    {{ $techs := slice 
+{{/*
+  Accessibility:
+  - Uses proper landmark and role attributes
+  - Images have descriptive alt text (technology name + "logo")
+  - Duplicate items for animation are hidden from screen readers
+  - Marquee can be paused on hover (reduces motion sickness)
+  - Screen reader users get a static list of technologies
+*/}}
+<section class="tech-marquee-container" aria-label="Technology Stack" role="region">
+  {{/* Screen reader only: static list of technologies */}}
+  <ul class="sr-only" aria-label="Technologies I work with">
+    <li>Java</li>
+    <li>Spring Boot</li>
+    <li>Angular</li>
+    <li>React</li>
+    <li>TypeScript</li>
+    <li>Python</li>
+    <li>Kotlin</li>
+    <li>PostgreSQL</li>
+    <li>Docker</li>
+    <li>Kubernetes</li>
+    <li>Bootstrap</li>
+    <li>Azure</li>
+    <li>Tailwind CSS</li>
+    <li>GitHub</li>
+    <li>Jenkins</li>
+  </ul>
+
+  {{/* Visual marquee - hidden from screen readers to avoid duplicate content */}}
+  <div class="tech-marquee" aria-hidden="true">
+    {{ $techs := slice
       (dict "name" "Java" "icon" "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg")
       (dict "name" "Spring Boot" "icon" "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg")
       (dict "name" "Angular" "icon" "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg")
@@ -20,17 +48,17 @@
     }}
     {{ range $techs }}
       <div class="tech-item">
-        <img src="{{ .icon }}" alt="{{ .name }}" loading="lazy" />
+        <img src="{{ .icon }}" alt="{{ .name }} logo" loading="lazy" />
         <div class="tech-name">{{ .name }}</div>
       </div>
     {{ end }}
     {{/* Duplicate for seamless loop */}}
     {{ range $techs }}
       <div class="tech-item">
-        <img src="{{ .icon }}" alt="{{ .name }}" loading="lazy" />
+        <img src="{{ .icon }}" alt="" loading="lazy" role="presentation" />
         <div class="tech-name">{{ .name }}</div>
       </div>
     {{ end }}
   </div>
-</div>
+</section>
 

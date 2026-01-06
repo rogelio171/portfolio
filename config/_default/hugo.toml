@@ -1,4 +1,4 @@
-baseURL = 'http://localhost:1313/portfolio/'
+baseURL = 'https://rogelio171.github.io/portfolio/'
 languageCode = 'en-us'
 title = 'Rogelio Orona | Senior Software Engineer'
 enableGitInfo = false
@@ -17,4 +17,96 @@ enableGitInfo = false
     min = "0.112.0"
   [[module.imports]]
     path = "github.com/nunocoracao/blowfish/v2"
+
+# Sitemap configuration
+[sitemap]
+  changefreq = "weekly"
+  filename = "sitemap.xml"
+  priority = 0.5
+
+# ============================================
+# PERFORMANCE OPTIMIZATION
+# ============================================
+
+# Enable minification for production builds
+# Run with: hugo --minify
+[minify]
+  disableCSS = false
+  disableHTML = false
+  disableJS = false
+  disableJSON = false
+  disableSVG = false
+  disableXML = false
+  minifyOutput = true
+  [minify.tdewolff]
+    [minify.tdewolff.css]
+      decimals = -1
+      keepCSS2 = true
+    [minify.tdewolff.html]
+      keepComments = false
+      keepConditionalComments = true
+      keepDefaultAttrVals = true
+      keepDocumentTags = true
+      keepEndTags = true
+      keepQuotes = false
+      keepWhitespace = false
+    [minify.tdewolff.js]
+      keepVarNames = false
+      precision = 0
+    [minify.tdewolff.svg]
+      decimals = -1
+
+# Image processing configuration
+# See: https://gohugo.io/content-management/image-processing/
+[imaging]
+  # Default image quality for resizing
+  quality = 85
+  # Resampling filter for resizing (Lanczos is high-quality)
+  resampleFilter = "Lanczos"
+  # Anchor for image cropping (smart uses facial detection)
+  anchor = "Smart"
+  # Background color for image processing
+  bgColor = "#ffffff"
+  # Hint for WebP encoding (photo, picture, drawing, icon, text)
+  hint = "photo"
+
+  # EXIF data handling
+  [imaging.exif]
+    # Don't include EXIF in output (smaller files)
+    disableDate = false
+    disableLatLong = true
+    excludeFields = ""
+    includeFields = ""
+
+# Build caching for faster rebuilds
+[caches]
+  [caches.images]
+    dir = ":cacheDir/images"
+    maxAge = "720h"  # 30 days
+  [caches.assets]
+    dir = ":cacheDir/assets"
+    maxAge = "720h"  # 30 days
+  [caches.getresource]
+    dir = ":cacheDir/getresource"
+    maxAge = "720h"  # 30 days
+
+# Build configuration
+[build]
+  # Write stats for CSS purging tools (e.g., PurgeCSS)
+  writeStats = true
+  # Use post-process for CSS/JS fingerprinting
+  [build.buildStats]
+    enable = true
+
+# Related content configuration (for performance)
+[related]
+  includeNewer = true
+  threshold = 80
+  toLower = true
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+  [[related.indices]]
+    name = "categories"
+    weight = 80
 

@@ -1,0 +1,119 @@
+{{/*
+  Optimized Image Shortcode
+  =========================
+  Generates responsive images with WebP format and lazy loading.
+
+  Usage:
+    {{< optimized-image src="image.jpg" alt="Description" >}}
+    {{< optimized-image src="image.jpg" alt="Description" class="custom-class" >}}
+    {{< optimized-image src="image.jpg" alt="Description" sizes="(max-width: 768px) 100vw, 50vw" >}}
+
+  Parameters:
+    - src: Image path (required) - relative to page bundle or assets folder
+    - alt: Alt text for accessibility (required)
+    - class: Optional CSS classes
+    - sizes: Responsive sizes attribute (default: 100vw)
+    - width: Optional explicit width
+    - height: Optional explicit height
+    - eager: Set to "true" for above-the-fold images (disables lazy loading)
+
+  Performance Features:
+    - Automatic WebP conversion with JPEG/PNG fallback
+    - Multiple srcset sizes for responsive loading
+    - Native lazy loading (loading="lazy")
+    - Aspect ratio preservation to prevent layout shift
+    - Automatic width/height attributes for CLS optimization
+*/}}
+
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $class := .Get "class" | default "" -}}
+{{- $sizes := .Get "sizes" | default "(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 50vw" -}}
+{{- $eager := .Get "eager" | default "false" -}}
+
+{{/* Image processing widths for srcset */}}
+{{- $widths := slice 320 640 768 1024 1280 1536 -}}
+
+{{/* Try to get image from page resources first, then global assets */}}
+{{- $image := .Page.Resources.GetMatch $src -}}
+{{- if not $image -}}
+  {{- $image = resources.Get $src -}}
+{{- end -}}
+
+{{- if $image -}}
+  {{/* Generate WebP versions */}}
+  {{- $webpSrcset := slice -}}
+  {{- $fallbackSrcset := slice -}}
+
+  {{- range $width := $widths -}}
+    {{- if ge $image.Width $width -}}
+      {{/* WebP version */}}
+      {{- $resized := $image.Resize (printf "%dx webp q80" $width) -}}
+      {{- $webpSrcset = $webpSrcset | append (printf "%s %dw" $resized.RelPermalink $width) -}}
+
+      {{/* Fallback (original format) version */}}
+      {{- $fallbackResized := $image.Resize (printf "%dx q85" $width) -}}
+      {{- $fallbackSrcset = $fallbackSrcset | append (printf "%s %dw" $fallbackResized.RelPermalink $width) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/* Add original size if smaller than largest breakpoint */}}
+  {{- if lt $image.Width 1536 -}}
+    {{- $webp := $image.Resize (printf "%dx webp q80" $image.Width) -}}
+    {{- $webpSrcset = $webpSrcset | append (printf "%s %dw" $webp.RelPermalink $image.Width) -}}
+    {{- $fallbackSrcset = $fallbackSrcset | append (printf "%s %dw" $image.RelPermalink $image.Width) -}}
+  {{- end -}}
+
+  {{/* Default display image (medium size) */}}
+  {{- $displayWidth := 768 -}}
+  {{- if lt $image.Width $displayWidth -}}
+    {{- $displayWidth = $image.Width -}}
+  {{- end -}}
+  {{- $displayImage := $image.Resize (printf "%dx webp q80" $displayWidth) -}}
+  {{- $fallbackImage := $image.Resize (printf "%dx q85" $displayWidth) -}}
+
+  {{/* Determine loading attribute */}}
+  {{- $loading := "lazy" -}}
+  {{- $decoding := "async" -}}
+  {{- $fetchpriority := "" -}}
+  {{- if eq $eager "true" -}}
+    {{- $loading = "eager" -}}
+    {{- $decoding = "sync" -}}
+    {{- $fetchpriority = "high" -}}
+  {{- end -}}
+
+  <picture>
+    {{/* WebP source */}}
+    <source
+      type="image/webp"
+      srcset="{{ delimit $webpSrcset ", " }}"
+      sizes="{{ $sizes }}"
+    >
+    {{/* Fallback source */}}
+    <source
+      srcset="{{ delimit $fallbackSrcset ", " }}"
+      sizes="{{ $sizes }}"
+    >
+    {{/* Fallback img tag */}}
+    <img
+      src="{{ $fallbackImage.RelPermalink }}"
+      alt="{{ $alt }}"
+      width="{{ $image.Width }}"
+      height="{{ $image.Height }}"
+      loading="{{ $loading }}"
+      decoding="{{ $decoding }}"
+      {{ if $fetchpriority }}fetchpriority="{{ $fetchpriority }}"{{ end }}
+      {{ if $class }}class="{{ $class }}"{{ end }}
+      style="aspect-ratio: {{ $image.Width }} / {{ $image.Height }};"
+    >
+  </picture>
+{{- else -}}
+  {{/* Fallback for external images or when image not found */}}
+  <img
+    src="{{ $src }}"
+    alt="{{ $alt }}"
+    loading="{{ if eq $eager "true" }}eager{{ else }}lazy{{ end }}"
+    decoding="{{ if eq $eager "true" }}sync{{ else }}async{{ end }}"
+    {{ if $class }}class="{{ $class }}"{{ end }}
+  >
+{{- end -}}

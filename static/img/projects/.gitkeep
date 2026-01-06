@@ -1,0 +1,16 @@
+# Project Images Directory
+# ========================
+# Add your project screenshots and images here.
+#
+# Recommended naming convention:
+# - project-name-screenshot.png
+# - project-name-architecture.svg
+# - project-name-demo.gif
+#
+# Recommended sizes:
+# - Screenshots: 800x600px or 1200x800px
+# - Thumbnails: 400x300px
+# - Architecture diagrams: SVG preferred
+#
+# Usage in project-card shortcode:
+#   {{< project-card image="/img/projects/your-image.png" ... >}}

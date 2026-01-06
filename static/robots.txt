@@ -1,0 +1,12 @@
+# Robots.txt for Rogelio Orona Portfolio
+# https://www.robotstxt.org/robotstxt.html
+
+# Allow all crawlers access to all content
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://rogelioorona.github.io/portfolio/sitemap.xml
+
+# Crawl-delay for respectful crawling (optional, supported by some bots)
+# Crawl-delay: 1
