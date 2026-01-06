@@ -45,26 +45,16 @@
 {{/* Open Graph Meta Tags for Social Sharing     */}}
 {{/* ============================================ */}}
 
-{{- $title := .Title | default site.Title -}}
-{{- $description := .Description | default .Summary | default site.Params.author.bio | truncate 160 -}}
-{{- $url := .Permalink | default site.BaseURL -}}
+{{/* Use site-level defaults - this partial receives .Site context from Blowfish */}}
+{{- $title := site.Title -}}
+{{- $description := site.Params.author.bio | default "Senior Software Engineer Portfolio" | truncate 160 -}}
+{{- $url := site.BaseURL -}}
 {{- $siteName := site.Title -}}
-
-{{/* Determine page type */}}
 {{- $ogType := "website" -}}
-{{- if .IsPage -}}
-  {{- if in (slice "blog" "posts") .Section -}}
-    {{- $ogType = "article" -}}
-  {{- end -}}
-{{- end -}}
 
 {{/* Get image for Open Graph */}}
 {{- $ogImage := "" -}}
-{{- if .Params.image -}}
-  {{- $ogImage = .Params.image | absURL -}}
-{{- else if .Params.hero -}}
-  {{- $ogImage = .Params.hero | absURL -}}
-{{- else if site.Params.defaultOgImage -}}
+{{- if site.Params.defaultOgImage -}}
   {{- $ogImage = site.Params.defaultOgImage | absURL -}}
 {{- else -}}
   {{/* Default fallback image */}}
@@ -83,23 +73,8 @@
 {{- end }}
 <meta property="og:locale" content="{{ site.Language.Lang | default "en_US" }}">
 
-{{/* Article-specific Open Graph tags */}}
-{{- if eq $ogType "article" -}}
-{{- if .Date }}
-<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
-{{- end }}
-{{- if .Lastmod }}
-<meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
-{{- end }}
-{{- if .Params.author }}
-<meta property="article:author" content="{{ .Params.author }}">
-{{- else if site.Params.author.name }}
-<meta property="article:author" content="{{ site.Params.author.name }}">
-{{- end }}
-{{- range .Params.tags }}
-<meta property="article:tag" content="{{ . }}">
-{{- end }}
-{{- end -}}
+{{/* Article-specific Open Graph tags - simplified for site context */}}
+<meta property="article:author" content="{{ site.Params.author.name | default "Rogelio Orona" }}">
 
 {{/* ============================================ */}}
 {{/* Twitter Card Meta Tags                      */}}
@@ -123,11 +98,7 @@
 {{/* ============================================ */}}
 
 <meta name="author" content="{{ site.Params.author.name | default "Rogelio Orona" }}">
-{{- if .Keywords }}
-<meta name="keywords" content="{{ delimit .Keywords ", " }}">
-{{- else if .Params.tags }}
-<meta name="keywords" content="{{ delimit .Params.tags ", " }}">
-{{- end }}
+<meta name="keywords" content="Java, Spring Boot, Angular, React, TypeScript, Microservices, Software Engineer">
 
 {{/* Canonical URL */}}
 <link rel="canonical" href="{{ $url }}">
@@ -192,84 +163,8 @@
 }
 </script>
 
-{{/* BlogPosting Schema - Only for blog posts */}}
-{{- if and .IsPage (in (slice "blog" "posts") .Section) -}}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "{{ .Title }}",
-  "description": "{{ $description }}",
-  "url": "{{ .Permalink }}",
-  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
-  {{- if .Lastmod }}
-  "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
-  {{- else }}
-  "dateModified": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
-  {{- end }}
-  "author": {
-    "@type": "Person",
-    "name": "{{ site.Params.author.name | default "Rogelio Orona" }}",
-    "url": "{{ site.BaseURL }}"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "{{ site.Params.author.name | default "Rogelio Orona" }}",
-    "url": "{{ site.BaseURL }}"
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "{{ .Permalink }}"
-  },
-  {{- if $ogImage }}
-  "image": "{{ $ogImage }}",
-  {{- end }}
-  "keywords": [{{ range $index, $tag := .Params.tags }}{{ if $index }}, {{ end }}"{{ $tag }}"{{ end }}],
-  "wordCount": {{ .WordCount }},
-  "timeRequired": "PT{{ .ReadingTime }}M",
-  "inLanguage": "{{ site.Language.Lang | default "en-US" }}"
-}
-</script>
-{{- end -}}
-
-{{/* BreadcrumbList Schema for navigation */}}
-{{- if not .IsHome -}}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "{{ site.BaseURL }}"
-    }
-    {{- if .Parent -}}
-    ,{
-      "@type": "ListItem",
-      "position": 2,
-      "name": "{{ .Parent.Title }}",
-      "item": "{{ .Parent.Permalink }}"
-    }
-    ,{
-      "@type": "ListItem",
-      "position": 3,
-      "name": "{{ .Title }}",
-      "item": "{{ .Permalink }}"
-    }
-    {{- else -}}
-    ,{
-      "@type": "ListItem",
-      "position": 2,
-      "name": "{{ .Title }}",
-      "item": "{{ .Permalink }}"
-    }
-    {{- end -}}
-  ]
-}
-</script>
-{{- end -}}
+{{/* BlogPosting and BreadcrumbList schemas are omitted since this partial
+     receives .Site context from Blowfish theme and cannot access page-level fields */}}
 
 {{/*
    JAVASCRIPT NOTE:
