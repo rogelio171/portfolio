@@ -1,0 +1,74 @@
+# SkillBender project-level configuration
+# This file is committed to your repository. Use environment variables for secrets.
+
+version: "1"
+
+# LLM provider settings
+llm:
+  provider: anthropic          # anthropic | openai | ollama
+  model: claude-sonnet-4-6     # model ID for the chosen provider
+  # apiKey is read from ANTHROPIC_API_KEY / OPENAI_API_KEY env vars
+  maxTokens: 8192
+  temperature: 0.2
+  # Fallback chain: if primary provider fails, try these in order
+  fallback:
+    - provider: openai
+      model: gpt-4o
+
+# Agent pipeline settings
+pipeline:
+  # Stages to run (ordered). Remove or reorder to customize.
+  stages:
+    - analyze
+    - spec
+    - implement
+    - validate
+    - document
+
+  # Human approval required before proceeding past these stages
+  checkpoints:
+    - spec          # Review generated spec before implementation begins
+
+  # Max LLM retries per stage
+  maxRetries: 3
+
+  # Max implementation review loops
+  maxReviewLoops: 3
+
+# Codebase analysis
+analyzer:
+  # Directories to scan for similar patterns
+  include:
+    - src
+    - lib
+    - app
+  exclude:
+    - node_modules
+    - dist
+    - .git
+    - "*.test.*"
+    - "*.spec.*"
+  # Max file size to read (bytes)
+  maxFileSize: 102400   # 100KB
+
+# Spec and progress tracking
+tracker:
+  # Where to save spec markdown files
+  outputDir: .skillbender/specs
+  # Auto-commit spec updates
+  autoCommit: false
+
+# Documentation settings
+docs:
+  # Docs directories to scan and update
+  dirs:
+    - docs
+    - README.md
+  # Create docs if they don't exist
+  createIfMissing: true
+
+# Observability
+logging:
+  level: info           # trace | debug | info | warn | error
+  format: pretty        # pretty | json
+  # Set to json in CI/production

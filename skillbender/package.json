@@ -1,0 +1,65 @@
+{
+  "name": "skillbender",
+  "version": "0.1.0",
+  "description": "Enterprise autonomous feature resolution workflow — from description to documented, tested code.",
+  "type": "module",
+  "main": "./dist/cli/index.js",
+  "bin": {
+    "skillbender": "./dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli/index.ts",
+    "start": "node dist/cli/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "ai",
+    "cli",
+    "agent",
+    "feature-workflow",
+    "enterprise",
+    "llm",
+    "autonomous"
+  ],
+  "author": "rogelio171",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^1.0.0",
+    "@ai-sdk/openai": "^1.0.0",
+    "@ai-sdk/ollama": "^0.0.15",
+    "ai": "^4.0.0",
+    "commander": "^12.0.0",
+    "zod": "^3.22.0",
+    "pino": "^9.0.0",
+    "pino-pretty": "^11.0.0",
+    "yaml": "^2.4.0",
+    "glob": "^11.0.0",
+    "tiktoken": "^1.0.17",
+    "cosmiconfig": "^9.0.0",
+    "chalk": "^5.3.0",
+    "ora": "^8.0.0",
+    "inquirer": "^10.0.0",
+    "execa": "^9.0.0",
+    "p-limit": "^6.1.0",
+    "p-retry": "^6.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0",
+    "vitest": "^2.0.0"
+  }
+}

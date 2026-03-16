@@ -1,0 +1,21 @@
+node_modules/
+dist/
+*.js.map
+*.d.ts.map
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# SkillBender generated specs (keep config, ignore local specs)
+.skillbender/specs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
